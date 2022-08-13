@@ -2,8 +2,6 @@
 //  AppDelegate.swift
 //  ProjectPart-2
 //
-//  Created by Meet Miyani on 2022-08-07.
-//
 
 import UIKit
 
