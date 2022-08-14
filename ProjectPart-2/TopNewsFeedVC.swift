@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class TopNewsFeedVC: UIViewController {
     @IBOutlet weak var tblview: UITableView!
@@ -18,7 +19,7 @@ class TopNewsFeedVC: UIViewController {
         tblview.delegate = self
         
         tblview.register(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
-//
+
 //        tblview.register(CellTableViewCell.self,
 //                               forCellReuseIdentifier: "Cell")
 //         Do any additional setup after loading the view.
@@ -39,9 +40,8 @@ class TopNewsFeedVC: UIViewController {
                     print("Results: \(NewsModel.totalResults)")
 
                     for article in NewsModel.articles{
-                        self.items.append(ItemToDo(title: article.title, description: article.description, url: article.url, urlToImage: article.urlToImage))
+                        self.items.append(ItemToDo(title: article.title, description: article.description, url: article.url, urlToImage: article.urlToImage ?? ""))
                         print(self.items.count)
-////                              items.append(ItemToDo (title: article.url, description: article.description, url: items.url, urlToImage: items.urlToImage))
                     }
                     DispatchQueue.main.async {
                         self.tblview.reloadData()
@@ -57,6 +57,23 @@ class TopNewsFeedVC: UIViewController {
 //        items.append(ItemToDo (title: "Item 2", description: "Description 2", url: "sd", urlToImage: "sd"))
 //        items.append(ItemToDo (title: "Item 2", description: "Description 2", url: "sd", urlToImage: "sd"))
 //            }
+    }
+    
+    @IBAction func onProfileClick(_ sender: UIButton) {
+        navigateToProfileScreen()
+    }
+    private func navigateToProfileScreen() {
+        performSegue(withIdentifier: "ToProfileScreen", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ToProfileScreen" {
+            if let userEmailID = Auth.auth().currentUser?.email {
+                let destination = segue.destination as! ProfileScreenVC
+                destination.userEmailID = userEmailID
+                
+            }
+        }
     }
 }
 
@@ -75,23 +92,21 @@ extension TopNewsFeedVC : UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CellTableViewCell
-//        return cell
-        
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-
 
         let item = items[indexPath.row]
         let data = try? Data(contentsOf: URL(string: item.urlToImage)!)
 
         cell.lblText.text = item.title
-//        cell.lbldesc.text = item.description
         cell.imgView.image = UIImage(data: data!)
+//        cell.lbldesc.text = item.description
 //        var content = cell.defaultContentConfiguration()
 //        content.text = item.urlToImage
 //        content.secondaryText = item.url
 //        cell.contentConfiguration = content
         return cell
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "NewsDescriptionVC") as! NewsDescriptionVC
@@ -133,17 +148,9 @@ struct Article: Decodable {
     let title: String!
     let description: String!
     let url: String
-    let urlToImage: String
+    let urlToImage: String?
 //    let publishedAt: Date
     let content: String
-    
-//    func printNews(){
-//        print("-------")
-//        print("title: \(title!)")
-//        print("url: \(url)")
-//        print("urlToImage:\(urlToImage)")
-//        print("Description: \(description!)")
-//    }
 }
 
 struct Source: Decodable {
