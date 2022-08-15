@@ -72,13 +72,15 @@ class LoginVC: UIViewController {
             
             strongSelf.navigateToNewsScreen()
         }
-        passwordInput.text = ""
+        
     }
     private func navigateToNewsScreen() {
         performSegue(withIdentifier: "ToNewsFeedScreen", sender: self)
+        passwordInput.text = ""
     }
     private func navigateToRegisterScreen() {
         performSegue(withIdentifier: "ToRegisterScreen", sender: self)
+        passwordInput.text = ""
     }
     private func showAlert(){
         let message = "Try Again"
@@ -95,5 +97,8 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func onClickNewUser(_ sender: UIButton) {
-        navigateToRegisterScreen()    }
+        navigateToRegisterScreen()
+        emailInput.text = ""
+        passwordInput.text = ""
+    }
 }

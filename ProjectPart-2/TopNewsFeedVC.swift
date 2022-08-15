@@ -75,6 +75,17 @@ class TopNewsFeedVC: UIViewController {
             }
         }
     }
+    
+    @IBAction func onClickLogout(_ sender: UIButton) {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+            dismiss(animated: true)
+        } catch let signOutError as NSError {
+            print("Error Signing Out: \(signOutError)")
+        }
+    }
+    
 }
 
 struct ItemToDo {
@@ -159,9 +170,13 @@ struct Source: Decodable {
 }
 
 func getURL() -> URL? {
-    let baseUrl = "https://newsapi.org/v2/everything?q=Apple&from=2022-08-12&sortBy=popularity&apiKey=925329d682844a20b467fc1d21f17cac"
-    let endpoint = "\(baseUrl)"
-    return  URL(string: endpoint)
+//    let date = Date.now.
+    let apiKey = "925329d682844a20b467fc1d21f17cac"
+    let sortBy = "popularity"
+    let topic = "Apple"
+    let baseUrl = "https://newsapi.org/v2/everything?q=\(topic)&sortBy=\(sortBy)&apiKey=\(apiKey)"
+//    let endpoint = "\(baseUrl)"
+    return  URL(string: baseUrl)
 }
 
 func parseJson(data: Data)-> NewsModel?{

@@ -17,6 +17,10 @@ class ProfileScreenVC: UIViewController {
         username.text = userEmailID
     }
     
+    @IBAction func onClickHomeScreen(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+    
     @IBAction func onClickCountry(_ sender: UIButton) {
     }
     
