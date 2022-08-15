@@ -84,15 +84,15 @@ class LoginVC: UIViewController {
     }
     private func showAlert(){
         let message = "Try Again"
-        let alert2 = UIAlertController(title: "Authentication", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Authentication", message: message, preferredStyle: .alert)
 
         let okButton = UIAlertAction(title: "Ok", style: .default) { _ in
 
             print("Ok button is pressed")
         }
 
-        alert2.addAction(okButton)
-        self.show(alert2, sender: nil)
+        alert.addAction(okButton)
+        self.show(alert, sender: nil)
         passwordInput.text = ""
     }
     

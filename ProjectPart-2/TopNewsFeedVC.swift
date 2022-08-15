@@ -9,6 +9,7 @@ import FirebaseAuth
 class TopNewsFeedVC: UIViewController {
     @IBOutlet weak var tblview: UITableView!
     
+    @IBOutlet weak var businessTab: UIButton!
     let tableViewData = Array(repeating: "Item", count: 5)
     private var items: [ItemToDo] = []
     
@@ -19,11 +20,22 @@ class TopNewsFeedVC: UIViewController {
         tblview.delegate = self
         
         tblview.register(UINib(nibName: "Cell", bundle: nil), forCellReuseIdentifier: "Cell")
+        getAllNews(category: "Apple")
 
-//        tblview.register(CellTableViewCell.self,
+        //        tblview.register(CellTableViewCell.self,
 //                               forCellReuseIdentifier: "Cell")
 //         Do any additional setup after loading the view.
-        let url: URL? = getURL()
+        
+
+        //         func loadDefaultItems() {
+//        items.append(ItemToDo (title: "Item 1", description: "Description", url: "www.google.com", urlToImage: "www.google.com"))
+//        items.append(ItemToDo (title: "Item 2", description: "Description", url: "www.google.com", urlToImage: "www.google.com"))
+//            }
+        
+    }
+    
+    private func getAllNews(category: String){
+        let url: URL? = getURL(topic: category)
         let urlSession = URLSession(configuration: .default)
         if let url = url {
             let dataTask = urlSession.dataTask(with: url) { data, response, error in
@@ -51,14 +63,11 @@ class TopNewsFeedVC: UIViewController {
 
             dataTask.resume()
         }
-//         func loadDefaultItems() {
-//        items.append(ItemToDo (title: "Item 2", description: "Description 2", url: "sd", urlToImage: "sd"))
-//        items.append(ItemToDo (title: "Item 2", description: "Description 2", url: "sd", urlToImage: "sd"))
-//        items.append(ItemToDo (title: "Item 2", description: "Description 2", url: "sd", urlToImage: "sd"))
-//        items.append(ItemToDo (title: "Item 2", description: "Description 2", url: "sd", urlToImage: "sd"))
-//            }
     }
     
+    @IBAction func onBusinessNewsClick(_ sender: UIButton) {
+        getAllNews(category: (businessTab.titleLabel?.text)!)
+    }
     @IBAction func onProfileClick(_ sender: UIButton) {
         navigateToProfileScreen()
     }
@@ -85,7 +94,6 @@ class TopNewsFeedVC: UIViewController {
             print("Error Signing Out: \(signOutError)")
         }
     }
-    
 }
 
 struct ItemToDo {
@@ -124,7 +132,6 @@ extension TopNewsFeedVC : UITableViewDelegate,UITableViewDataSource{
         nextViewController.txtTitleStr = items[indexPath.row].title
         nextViewController.txtDescriptionStr = items[indexPath.row].description
         nextViewController.imgNewsStr = items[indexPath.row].urlToImage
-//        nextViewController.imgNews = items[indexPath.row].url
         
         present(nextViewController, animated: false)
 //        self.navigationController?.pushViewController(nextViewController, animated: false)
@@ -169,13 +176,10 @@ struct Source: Decodable {
     let name: String
 }
 
-func getURL() -> URL? {
-//    let date = Date.now.
+func getURL(topic: String) -> URL? {
     let apiKey = "925329d682844a20b467fc1d21f17cac"
     let sortBy = "popularity"
-    let topic = "Apple"
     let baseUrl = "https://newsapi.org/v2/everything?q=\(topic)&sortBy=\(sortBy)&apiKey=\(apiKey)"
-//    let endpoint = "\(baseUrl)"
     return  URL(string: baseUrl)
 }
 
